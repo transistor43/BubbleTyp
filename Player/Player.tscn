@@ -1,0 +1,328 @@
+[gd_scene load_steps=37 format=2]
+
+[ext_resource path="res://Player/Player.gd" type="Script" id=1]
+[ext_resource path="res://Sprites/Colors/red.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/BubbleMan/bubbleman-sheet.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/BubbleMan/bubble.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/BubbleMan/Dash/dash1.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/BubbleMan/Dash/dash2.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/BubbleMan/Dash/dash3.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/BubbleMan/Dash/dash4.png" type="Texture" id=8]
+[ext_resource path="res://Areas/Hitbox.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Sounds/dash.ogg" type="AudioStream" id=10]
+[ext_resource path="res://Sounds/jump.ogg" type="AudioStream" id=11]
+[ext_resource path="res://Sounds/bubble.ogg" type="AudioStream" id=12]
+
+[sub_resource type="Curve" id=8]
+max_value = 0.1
+_data = [ Vector2( 0, 0.0945455 ), 0.0, -0.109459, 0, 0, Vector2( 0.191919, 0.0254545 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), -0.0169697, 0.0, 0, 0 ]
+
+[sub_resource type="Curve" id=21]
+_data = [ Vector2( 0, 0 ), 0.0, 0.0, 0, 0, Vector2( 0.0848485, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.743434, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CircleShape2D" id=7]
+radius = 3.0
+
+[sub_resource type="CanvasItemMaterial" id=4]
+particles_animation = true
+particles_anim_h_frames = 3
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Curve" id=2]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), -3.16226, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=3]
+curve = SubResource( 2 )
+
+[sub_resource type="ParticlesMaterial" id=1]
+lifetime_randomness = 0.38
+emission_shape = 2
+emission_box_extents = Vector3( 3, 0, 1 )
+flag_disable_z = true
+direction = Vector3( 0, -1, 0 )
+gravity = Vector3( 0, 98, 0 )
+initial_velocity = 28.74
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+damping = 44.25
+scale_curve = SubResource( 3 )
+anim_offset = 1.0
+anim_offset_random = 1.0
+
+[sub_resource type="Animation" id=5]
+resource_name = "Jump"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Particles2D:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
+[sub_resource type="Animation" id=6]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Particles2D:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+
+[sub_resource type="AnimationNodeAnimation" id=16]
+animation = "left"
+
+[sub_resource type="AnimationNodeAnimation" id=17]
+animation = "right"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id=11]
+blend_point_0/node = SubResource( 16 )
+blend_point_0/pos = -1.0
+blend_point_1/node = SubResource( 17 )
+blend_point_1/pos = 1.0
+
+[sub_resource type="AnimationNodeAnimation" id=18]
+animation = "idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=19]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=20]
+
+[sub_resource type="AnimationNodeStateMachine" id=9]
+states/Walk/node = SubResource( 11 )
+states/Walk/position = Vector2( 186, 147 )
+states/idle/node = SubResource( 18 )
+states/idle/position = Vector2( 431, 247 )
+transitions = [ "Walk", "idle", SubResource( 19 ), "idle", "Walk", SubResource( 20 ) ]
+start_node = "idle"
+graph_offset = Vector2( -26, 34 )
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=10]
+
+[sub_resource type="Animation" id=15]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
+
+[sub_resource type="Animation" id=14]
+resource_name = "idle"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0 ]
+}
+
+[sub_resource type="Animation" id=12]
+resource_name = "left"
+length = 0.1
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 2 ]
+}
+
+[sub_resource type="Animation" id=13]
+resource_name = "right"
+length = 0.1
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 1 ]
+}
+
+[sub_resource type="SpriteFrames" id=22]
+animations = [ {
+"frames": [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="Animation" id=23]
+resource_name = "Dash"
+length = 0.3
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("DashEffect:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("DashEffect:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.05, 0.1, 0.15 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+
+[sub_resource type="Animation" id=24]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("DashEffect:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("DashEffect:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
+
+[node name="Player" type="KinematicBody2D"]
+collision_layer = 3
+script = ExtResource( 1 )
+gravity = 7.0
+acceleration = SubResource( 8 )
+initial_jump_speed = 150.0
+air_jump_speed = 2.5
+dash_speed = 700.0
+dash_curve = SubResource( 21 )
+
+[node name="Hitbox" parent="." instance=ExtResource( 9 )]
+
+[node name="CollisionPolygon2D" parent="Hitbox" index="0"]
+polygon = PoolVector2Array( -3, 1, -3, -8, 3, -8, 3, 1 )
+
+[node name="JumpDetector" type="Area2D" parent="."]
+position = Vector2( 0, 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="JumpDetector"]
+shape = SubResource( 7 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2( 0, -3 )
+polygon = PoolVector2Array( -3.62494, 2.92271, -3, -5, 3, -5, 3.61362, 3.03407, 2.97656, 3.86719, -3, 3.86719 )
+
+[node name="Sprite" type="Sprite" parent="."]
+self_modulate = Color( 2, 2, 2, 1 )
+position = Vector2( 0, -4 )
+texture = ExtResource( 3 )
+hframes = 3
+
+[node name="Particles2D" type="Particles2D" parent="."]
+material = SubResource( 4 )
+position = Vector2( 0, 1 )
+emitting = false
+amount = 100
+local_coords = false
+process_material = SubResource( 1 )
+texture = ExtResource( 2 )
+
+[node name="JumpAnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Jump = SubResource( 5 )
+anims/RESET = SubResource( 6 )
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource( 9 )
+anim_player = NodePath("../AnimationPlayer")
+active = true
+parameters/playback = SubResource( 10 )
+parameters/Walk/blend_position = -0.197313
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 15 )
+anims/idle = SubResource( 14 )
+anims/left = SubResource( 12 )
+anims/right = SubResource( 13 )
+
+[node name="Bubble" type="Sprite" parent="."]
+visible = false
+self_modulate = Color( 10, 10, 10, 0.49 )
+position = Vector2( 0, -4 )
+texture = ExtResource( 4 )
+
+[node name="DashEffect" type="AnimatedSprite" parent="."]
+visible = false
+self_modulate = Color( 20, 20, 20, 1 )
+position = Vector2( 0, -4 )
+frames = SubResource( 22 )
+
+[node name="DashAnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Dash = SubResource( 23 )
+anims/RESET = SubResource( 24 )
+
+[node name="DashSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 10 )
+
+[node name="JumpSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 11 )
+
+[node name="BubbleSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 12 )
+
+[connection signal="damaged" from="Hitbox" to="." method="_on_Hitbox_damaged"]
+[connection signal="body_entered" from="JumpDetector" to="." method="_on_JumpDetector_body_entered"]
+
+[editable path="Hitbox"]
